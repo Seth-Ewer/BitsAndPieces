@@ -107,6 +107,32 @@ function mergeKLists(lists: Array<ListNode | null>): ListNode | null {
 };
 
 
+function removeRecurseHelper(currentNode: ListNode | null, targetNode: ListNode | null): ListNode | null {
+  if (targetNode && currentNode) {
+    currentNode.next = removeRecurseHelper(currentNode.next, targetNode.next);
+    return currentNode
+  } else {
+    return currentNode?.next ? currentNode.next : null;
+  }
+}
+function removeNthFromEnd(head: ListNode | null, n: number): ListNode | null {
+  if (head) {
+    var check: ListNode | null = head;
+    for (var i = 0; i < n; i++) {
+      if (check?.next) {
+        check = check.next;
+      } else {
+        check = null;
+        break;
+      }
+    }
+    return removeRecurseHelper(head, check);
+  } else {
+    return null;
+  }
+};
+
+
 var node = new ListNode(1, new ListNode(2, new ListNode(3, new ListNode(4, new ListNode(5, null)))));
 
 //reverseList(node);
