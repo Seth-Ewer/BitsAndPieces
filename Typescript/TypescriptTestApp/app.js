@@ -99,6 +99,7 @@ function mergeKListsRecursion(lists, list) {
 function mergeKLists(lists) {
     if (lists) {
         lists = lists.filter(a => a);
+        lists.sort((a, b) => a.val - b.val);
         var temp = lists.shift();
         if (temp) {
             temp.next = mergeKListsRecursion(lists, temp.next);
@@ -113,6 +114,69 @@ function mergeKLists(lists) {
     }
 }
 ;
+function removeRecurseHelper(currentNode, targetNode) {
+    if (targetNode && currentNode) {
+        currentNode.next = removeRecurseHelper(currentNode.next, targetNode.next);
+        return currentNode;
+    }
+    else {
+        return currentNode?.next ? currentNode.next : null;
+    }
+}
+function removeNthFromEnd(head, n) {
+    if (head) {
+        var check = head;
+        for (var i = 0; i < n; i++) {
+            if (check?.next) {
+                check = check.next;
+            }
+            else {
+                check = null;
+                break;
+            }
+        }
+        return removeRecurseHelper(head, check);
+    }
+    else {
+        return null;
+    }
+}
+;
+function reorderList(head) {
+    var fast = head;
+    var slow = head;
+    while (fast?.next?.next) {
+        fast = fast.next.next;
+        slow = slow.next;
+    }
+    slow = slow.next;
+    var next = null;
+    while (slow?.next) {
+        var temp = slow.next;
+        slow.next = next;
+        next = slow;
+        slow = temp;
+    }
+    slow.next = next;
+    reorderMerge(head, slow);
+}
+;
+function reorderMerge(list1, list2) {
+    if (list1) {
+        if (list2) {
+            list1.next = reorderMerge(list2, list1.next);
+            return list1;
+        }
+        else if (list1.next) {
+            return null;
+        }
+        else {
+            list1.next = reorderMerge(list2, list1.next);
+            return list1;
+        }
+    }
+    return null;
+}
 var node = new ListNode(1, new ListNode(2, new ListNode(3, new ListNode(4, new ListNode(5, null)))));
 //reverseList(node);
 var point = new ListNode(3, new ListNode(2, new ListNode(0, new ListNode(-4, null))));
@@ -122,5 +186,12 @@ var lOne = new ListNode(1, new ListNode(2, new ListNode(4, null)));
 var lTwo = new ListNode(1, new ListNode(3, new ListNode(4, null)));
 //mergeTwoLists(lOne, lTwo);
 var MergeKListsTest = [ListNodeConstructor([1, 4, 5]), ListNodeConstructor([1, 3, 4]), ListNodeConstructor([2, 6])];
-mergeKLists(MergeKListsTest);
+//mergeKLists(MergeKListsTest);
+var ReOrderList = ListNodeConstructor([1, 2, 3, 4]);
+reorderList(ReOrderList);
+while (ReOrderList) {
+    console.log(ReOrderList);
+    ReOrderList = ReOrderList.next;
+}
+console.log("");
 //# sourceMappingURL=app.js.map

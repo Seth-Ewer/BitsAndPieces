@@ -131,7 +131,45 @@ function removeNthFromEnd(head: ListNode | null, n: number): ListNode | null {
     return null;
   }
 };
+function reorderList(head: ListNode | null): void {
+  var fast = head;
+  var slow = head;
 
+  while (fast?.next?.next) {
+    fast = fast.next.next;
+    slow = slow!.next;
+  }
+  slow = slow!.next;
+  
+
+  var next = null;
+  while (slow?.next) {
+    var temp = slow.next;
+    slow.next = next;
+    next = slow;
+    slow = temp;
+  }
+  slow!.next = next;
+
+
+  reorderMerge(head, slow);
+};
+
+function reorderMerge(list1: ListNode | null, list2: ListNode | null): ListNode | null {
+  if (list1) {
+    if (list2) {
+      list1.next = reorderMerge(list2, list1.next);
+      return list1;
+
+    } else if (list1.next) {
+      return null;
+    } else {
+      list1.next = reorderMerge(list2, list1.next);
+      return list1;
+    }
+  }
+  return null;
+}
 
 var node = new ListNode(1, new ListNode(2, new ListNode(3, new ListNode(4, new ListNode(5, null)))));
 
@@ -153,4 +191,13 @@ var lTwo = new ListNode(1, new ListNode(3, new ListNode(4, null)));
 
 var MergeKListsTest = [ListNodeConstructor([1, 4, 5]), ListNodeConstructor([1, 3, 4]), ListNodeConstructor([2, 6])];
 
-mergeKLists(MergeKListsTest);
+//mergeKLists(MergeKListsTest);
+
+var ReOrderList = ListNodeConstructor([1, 2, 3, 4]);
+reorderList(ReOrderList);
+
+while (ReOrderList) {
+  console.log(ReOrderList);
+  ReOrderList = ReOrderList.next;
+}
+console.log("");
