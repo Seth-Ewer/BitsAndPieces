@@ -1,5 +1,18 @@
 ﻿Console.WriteLine("Hi!");
 
+
+public class ListNode
+{
+  public int val;
+  public ListNode next;
+  public ListNode(int val = 0, ListNode next = null)
+  {
+    this.val = val;
+    this.next = next;
+  }
+}
+
+
 public class Solution
 {
   //https://leetcode.com/problems/product-of-array-except-self/
@@ -220,5 +233,81 @@ public class Solution
       }
     }
     return false;
+  }
+
+  //https://leetcode.com/problems/container-with-most-water/
+  public int MaxArea(int[] height)
+  {
+    int max = 0;
+    int left = 0;
+    int right = height.Length - 1;
+
+    while (left < right)
+    {
+      if (height[left] > height[right])
+      {
+        if (max < height[right] * (right - left))
+        {
+          max = height[right] * (right - left);
+        }
+        right--;
+      }
+      else
+      {
+        if (max < height[left] * (right - left))
+        {
+          max = height[left] * (right - left);
+        }
+        left++;
+      }
+    }
+    return max;
+
+  }
+
+  //https://leetcode.com/problems/remove-nth-node-from-end-of-list/
+  public ListNode RemoveNthFromEnd(ListNode head, int n)
+  {
+    if (head == null) return null;
+
+    var nth = head;
+    for (int i = 0; i < n; i++)
+    {
+      if (nth.next == null) return head.next;
+      nth = nth.next;
+    }
+    var temp = head;
+    while (nth.next != null)
+    {
+      nth = nth.next;
+      temp = temp.next;
+    }
+    temp.next = temp.next.next;
+
+    return head;
+  }
+
+  //https://leetcode.com/problems/longest-substring-without-repeating-characters/
+  public int LengthOfLongestSubstring(string s)
+  {
+    if (s.Length == 0) return 0;
+    int max = 0;
+    int start = 0;
+    var letters = new Dictionary<char, int>();
+
+    for (int i = 0; i < s.Length; i++)
+    {
+      if (letters.ContainsKey(s[i]) && letters[s[i]] >= start)
+      {
+        start = letters[s[i]] + 1;
+        letters[s[i]] = i;
+      }
+      else
+      {
+        letters[s[i]] = i;
+      }
+      if (max < (i - start + 1)) max = i - start + 1;
+    }
+    return max;
   }
 }
