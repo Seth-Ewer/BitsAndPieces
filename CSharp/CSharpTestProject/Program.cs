@@ -11,9 +11,23 @@ public class ListNode
     this.next = next;
   }
 }
+public class TreeNode
+{
+  public int val;
+  public TreeNode left;
+  public TreeNode right;
+  public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
+  {
+    this.val = val;
+    this.left = left;
+    this.right = right;
+  }
+}
 
 
-public class Solution
+
+
+  public class Solution
 {
   //https://leetcode.com/problems/product-of-array-except-self/
   public int[] ProductExceptSelf(int[] nums)
@@ -61,14 +75,16 @@ public class Solution
   //https://leetcode.com/problems/two-sum/
   public int[] TwoSum(int[] nums, int target)
   {
+    var dict = new Dictionary<int, int>();
     for (int i = 0; i < nums.Length; i++)
     {
-      for (int j = i + 1; j < nums.Length; j++)
+      if (dict.ContainsKey(nums[i]))
       {
-        if ((nums[j] + nums[i]) == target)
-        {
-          return [i, j];
-        }
+        return [i, dict[nums[i]]];
+      }
+      else if (!dict.ContainsKey(target - nums[i]))
+      {
+        dict.Add(target - nums[i], i);
       }
     }
     return [0, 0];
@@ -310,4 +326,74 @@ public class Solution
     }
     return max;
   }
+
+  //https://leetcode.com/problems/valid-parentheses/
+  public bool IsValid(string s)
+  {
+    var TheStack = new Stack<char>();
+    foreach (char a in s)
+    {
+      if (a == '(' || a == '{' || a == '[')
+      {
+        TheStack.Push(a);
+      }
+      else if (a == ')')
+      {
+        var b = '1';
+        TheStack.TryPop(out b);
+        if (b != '(') return false;
+      }
+      else if (a == '}')
+      {
+        var b = '1';
+        TheStack.TryPop(out b);
+        if (b != '{') return false;
+      }
+      else if (a == ']')
+      {
+        var b = '1';
+        TheStack.TryPop(out b);
+        if (b != '[') return false;
+      }
+    }
+    if (TheStack.Any()) return false;
+    return true;
+  }
+
+  //https://leetcode.com/problems/merge-two-sorted-lists/
+  public ListNode MergeTwoLists(ListNode list1, ListNode list2)
+  {
+    if (list1 == null)
+    {
+      return list2;
+    }
+    else if (list2 == null)
+    {
+      return list1;
+    }
+
+    if (list1.val < list2.val)
+    {
+      list1.next = MergeTwoLists(list1.next, list2);
+      return list1;
+    }
+    else
+    {
+      list2.next = MergeTwoLists(list2.next, list1);
+      return list2;
+    }
+  }
+
+  //https://leetcode.com/problems/invert-binary-tree/
+  public TreeNode InvertTree(TreeNode root)
+  {
+    if (root != null)
+    {
+      var temp = root.right;
+      root.right = InvertTree(root.left);
+      root.left = InvertTree(temp);
+    }
+    return root;
+  }
 }
+
